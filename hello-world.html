@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- HTML5 Hello world by kirupa - http://www.kirupa.com/html5/getting_your_feet_wet_html5_pg1.htm -->
+<html lang="en-us">
+
+<head>
+<meta charset="utf-8">
+<title>Hello...</title>
+<link rel="stylesheet" href="hello-world.css"/>
+<script src="//cdn.jsdelivr.net/svg.js/0.6/svg.min.js"></script>
+
+</head>
+
+<body>
+<div id="mainContent">
+<p id="helloText">?</p>
+<button id="clickButton" class="buttonStyle">click me</button>
+</div>
+
+<div id="mapDiv">
+	<canvas id="myCanvas" width="300" height="300">
+	<span id="mapSpan">
+		<img src="Grid1.JPG"></img>
+	</span>
+</div>
+
+
+
+
+<script> 
+var myButton = document.getElementById("clickButton");
+var myText = document.getElementById("helloText");
+
+myButton.addEventListener('click', doSomething, false)
+
+function doSomething() {
+	myText.textContent = "A1";
+//var draw = svg('drawing').size(300, 300);
+	//var rect = draw.rect(100, 100).attr({ fill: '#f06' });
+	<script>
+	var draw = svg('paper').size(300, 300);
+	var rect = draw.rect(100, 100).attr({ fill: '#f06' });
+	rect.animate().move(150, 150);
+</script>
+	
+}
+</script>
+
+</body>
+</html>

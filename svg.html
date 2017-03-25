@@ -1,0 +1,245 @@
+<html>
+    <head>
+        
+        <style>
+            
+            .blink {
+  animation: blink-animation 1s steps(2, start) infinite;
+  -webkit-animation: blink-animation 1s steps(2, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+            
+
+        </style>
+        
+        
+    </head>
+
+<body>
+    <canvas id="canvas" style="border:2px solid black;" width="10" height="10">
+    </canvas>
+        
+<div>
+    <button id="clickButton" class="buttonStyle">click me</button>
+</div>
+
+<span id="theSpan"></span>
+
+<span id="dump" style="border:solid;">dump</span>
+
+
+<script>
+
+    //var image = document.getElementById('image');
+
+    var canvas = document.getElementById('canvas');
+    
+    var ctx = canvas.getContext('2d');
+    
+   // var spn = document.getElementById('theSpan');
+
+    var imageFile;
+
+// named
+class ImageFile {
+  constructor(fileName) {
+      this.fileName = fileName;
+      var strings = fileName.split("_");
+      
+      this.building = strings[0];
+      this.floor = strings[1];
+      this.xBlocks = strings[2];
+      this.yBlocks = strings[3];
+      this.xPix = strings[4];
+      this.yPix = strings[5];
+  }
+};
+
+class Block {
+    constructor(x,y, sizeX, sizeY){
+        this.x = x;
+        this.y = y;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+    }
+}
+
+
+    var image = new Image();
+    image = make_base("5Sim_5_19_18_777_674.jpg");
+
+
+
+    image.onload = function(){
+      // image  has been loaded
+      
+      //imageFile = new ImageFile(image.src.trim().substr(0,image.src.trim().indexOf('.')));
+      var strt = image.src.trim().lastIndexOf('/')+1;
+      var send = image.src.trim().lastIndexOf('.');
+      var tt = image.src.trim().substr(strt, send-strt);
+      //alert("1" + tt);
+      imageFile = new ImageFile(tt);
+      //alert("1" + imageFile.xBlocks);
+
+    canvas.height = imageFile.yPix-1;
+    canvas.width = imageFile.xPix-1;
+     
+    ctx.drawImage(image,0,0, imageFile.xPix , imageFile.yPix);
+
+
+/*
+    var xBlockSize = imageFile.xPix / imageFile.xBlocks;
+    var yBlockSize = imageFile.yPix / imageFile.yBlocks;
+    
+    // target 5,7
+    
+    ctx.fillRect(xBlockSize*4, yBlockSize*6,xBlockSize,yBlockSize);
+*/
+     
+};
+
+
+
+
+
+function make_base(fileName)
+{
+  base_image = new Image();
+  base_image.src = fileName;
+  
+  base_image.onload = function(){
+      var strt = base_image.src.trim().lastIndexOf('/')+1;
+      var send = base_image.src.trim().lastIndexOf('.');
+      var tt = base_image.src.trim().substr(strt, send-strt);
+      //alert(tt);
+      imageFile = new ImageFile(tt);
+      //alert(imageFile.xBlocks);
+     
+    ctx.drawImage(image, 0,0, imageFile.xPix , imageFile.yPix);
+    //canvas.height = imageFile.yPix-1;
+    //canvas.width = imageFile.xPix-1;
+  }
+  
+  return base_image;
+}
+
+
+
+
+
+
+
+
+
+
+var myButton = document.getElementById("clickButton");
+
+myButton.addEventListener('click', goNow, false);
+
+function goNow() {
+    	var dump = document.getElementById('dump');
+	var btn = document.getElementById('clickButton');
+    //dump.innerHTML += "<br/>" + btn.textContent;
+    if(btn.textContent == "click me")
+    {
+        var b1 = new Block(6,3,2,1);
+        flashBlock(b1);
+        btn.textContent = "clear";
+    }
+    else
+    {
+        btn.textContent = "click me"
+        var spn = document.getElementById('theSpan');
+        spn.style.top = '0px';
+        spn.style.left  = '0px';
+        spn.style.height  = '0px';
+        spn.style.width  = '0px';
+    }
+}
+
+
+function flashBlock(stuff){
+    doSomething(stuff.x, stuff.y, stuff.sizeX, stuff.sizeY);
+}
+
+
+function doSomething(blockX, blockY, xSize, ySize) {
+    ctx.fillStyle="#0000FF";
+    var xBlockSize = imageFile.xPix / imageFile.xBlocks;
+    var yBlockSize = imageFile.yPix / imageFile.yBlocks;
+    
+    // target 5,7
+    
+    //ctx.fillRect(xBlockSize*5, yBlockSize*8,xBlockSize,yBlockSize);
+	
+	 var spn = document.getElementById('theSpan');
+	 var dump = document.getElementById('dump');
+	
+	//spn.left = 100px;
+	//spn.height = 100px;
+	//spn.width = 100px;
+	//spn.innerHTML = spn.left;
+
+    var leftDiff = getOffset( document.getElementById('canvas') ).left; 
+    var topDiff = getOffset( document.getElementById('canvas') ).top; 
+
+    //canvas.style.position = 'absolute';
+    //canvas.style.left = '0px';
+    //canvas.style.top = '0px';
+
+	
+	spn.style.position = "absolute";
+    spn.style.left = xBlockSize*blockX + leftDiff + 2 +   'px';
+    spn.style.top = yBlockSize*blockY + topDiff + 2 +   'px';
+    spn.style.height = yBlockSize * ySize + 'px';
+    spn.style.width = xBlockSize * xSize + 'px';
+    //spn.style.border = 'solid';
+    spn.style.backgroundColor = 'blue';
+    spn.className = 'blink';
+
+    //dump.innerHTML += "<br/>" + leftDiff;
+    //dump.innerHTML += "<br/>" + topDiff;
+
+
+
+
+}
+
+
+function getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+}
+
+
+
+
+var imageFile 
+
+//
+
+
+</script>
+
+
+
+</body>
+</html>
+
+    
